@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Teamwork App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #2c3e50;
+            color: #fff;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: #34495e; /* Schimbare de culoare la scroll */
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links li a:hover {
+            color: #3498db;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 6rem auto 2rem; /* Adăugăm spațiu pentru navbar-ul fix */
+            padding: 0 1rem;
+            flex-grow: 1;
+        }
+
+        .description {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .description h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .description p {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+
+        .description ul {
+            list-style: none;
+            margin-left: 1rem;
+        }
+
+        .description ul li {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+        }
+
+        .description ul li::before {
+            content: "✔";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .links {
+            text-align: center;
+        }
+
+        .links h2 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 1rem;
+        }
+
+        .card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: #3498db;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+        }
+
+        footer {
+            background: #2c3e50;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+            box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        footer p {
+            font-size: 0.9rem;
+        }
+
+        /* Animații */
+        @keyframes fadeInDown {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsivitate */
+        @media (max-width: 768px) {
+            .navbar-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-menu {
+                width: 100%;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #34495e;
+                padding: 1rem;
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 0.5rem 0;
+            }
+
+            .hamburger {
+                display: flex;
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            main {
+                margin-top: 5rem; /* Spațiu mai mic pentru navbar pe mobil */
+            }
+
+            .description h2, .links h2 {
+                font-size: 1.5rem;
+            }
+
+            .card h3 {
+                font-size: 1.2rem;
+            }
+
+            .card p {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <h1 class="logo">Git Teamwork</h1>
+            <nav class="nav-menu">
+                <ul class="nav-links">
+                    <li><a href="#description">Descriere</a></li>
+                    <li><a href="#links">Resurse Utile</a></li>
+                </ul>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <main>
+        <section id="description" class="description">
+            <h2>De ce este GIT esențial pentru echipe?</h2>
+            <p>
+                Utilizarea aplicațiilor de lucru în echipă, precum GIT, este esențială în dezvoltarea software-ului modern. GIT, un sistem de control al versiunilor, permite mai multor dezvoltatori să colaboreze eficient la același proiect, fără a risca pierderea codului sau suprascrierea muncii colegilor. Printre avantajele majore se numără:
+            </p>
+            <ul>
+                <li><strong>Colaborare eficientă:</strong> Membrii echipei pot lucra simultan la diferite funcționalități, iar modificările sunt integrate armonios.</li>
+                <li><strong>Urmărirea modificărilor:</strong> Fiecare schimbare este înregistrată, permițând revenirea la versiuni anterioare dacă apar probleme.</li>
+                <li><strong>Gestionarea proiectelor:</strong> Platformele precum GitHub oferă instrumente pentru planificarea, urmărirea și gestionarea sarcinilor (ex. Projects).</li>
+                <li><strong>Scalabilitate:</strong> GIT este ideal pentru proiecte de orice dimensiune, de la aplicații mici la proiecte open-source uriașe.</li>
+            </ul>
+            <p>
+                În concluzie, GIT nu este doar un instrument tehnic, ci o soluție care îmbunătățește comunicarea, organizarea și productivitatea în echipă. Descoperă mai multe despre gestionarea proiectelor cu GIT folosind resursele de mai jos!
+            </p>
+        </section>
+        <section id="links" class="links">
+            <h2>Resurse Utile</h2>
+            <div class="card-container">
+                <!-- Card 1 -->
+                <div class="card">
+                    <h3>Despre Proiecte</h3>
+                    <p>Află ce sunt proiectele în GitHub și cum te pot ajuta să organizezi și să urmărești sarcinile echipei tale.</p>
+                    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects" class="btn" target="_blank">Explorează</a>
+                </div>
+                <!-- Card 2 -->
+                <div class="card">
+                    <h3>Crearea unui Proiect</h3>
+                    <p>Învață pas cu pas cum să creezi un proiect nou în GitHub pentru a gestiona eficient activitățile echipei.</p>
+                    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/creating-a-project" class="btn" target="_blank">Explorează</a>
+                </div>
+                <!-- Card 3 -->
+                <div class="card">
+                    <h3>Copierea unui Proiect</h3>
+                    <p>Descoperă cum să duplicați un proiect existent pentru a reutiliza structura și setările acestuia.</p>
+                    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/copying-an-existing-project" class="btn" target="_blank">Explorează</a>
+                </div>
+                <!-- Card 4 -->
+                <div class="card">
+                    <h3>Migrarea de la Projects Classic</h3>
+                    <p>Află cum să migrezi de la versiunea clasică a proiectelor GitHub la noua versiune îmbunătățită.</p>
+                    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/creating-projects/migrating-from-projects-classic" class="btn" target="_blank">Explorează</a>
+                </div>
+                <!-- Card 5 -->
+                <div class="card">
+                    <h3>Întrebări către GitHub Copilot</h3>
+                    <p>Învață cum să folosești GitHub Copilot pentru a pune întrebări și a primi răspunsuri utile direct în GitHub.</p>
+                    <a href="https://docs.github.com/en/copilot/using-github-copilot/asking-github-copilot-questions-in-github" class="btn" target="_blank">Explorează</a>
+                </div>
+                <!-- Card 6 -->
+                <div class="card">
+                    <h3>Gestionarea Vizibilității Proiectelor</h3>
+                    <p>Descoperă cum să configurezi vizibilitatea proiectelor tale pentru a controla accesul membrilor echipei.</p>
+                    <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/managing-your-project/managing-visibility-of-your-projects" class="btn" target="_blank">Explorează</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2023 Git Teamwork App. Toate drepturile rezervate.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
